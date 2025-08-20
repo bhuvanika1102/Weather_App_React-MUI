@@ -6,7 +6,6 @@ import DeviceThermostatIcon from "@mui/icons-material/DeviceThermostat";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
 import ArrowUpwardIcon from "@mui/icons-material/ArrowUpward";
 import SpeedIcon from "@mui/icons-material/Speed";
-import WavesIcon from "@mui/icons-material/Waves";
 const WeatherCard = ({ weather, unit }) => {
   if (!weather) return null;
 

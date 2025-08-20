@@ -83,14 +83,22 @@ const Home = () => {
         transition: "background 0.5s ease",
       }}
     >
-      <Box sx={{ position: "absolute", top: 15, left: 15 }}>
+      <Box
+        sx={{
+          position: "absolute",
+          top: 15,
+          left: 15,
+          display: "flex",
+          gap: 2,
+        }}
+      >
         <Select
           value={unit}
           onChange={(e) => {
             const newUnit = e.target.value;
             setUnit(newUnit);
             if (weather?.name) {
-              handleSearch(weather.name, newUnit); 
+              handleSearch(weather.name, newUnit);
             }
           }}
           sx={{
@@ -104,12 +112,39 @@ const Home = () => {
           <MenuItem value="metric">Celsius (°C)</MenuItem>
           <MenuItem value="imperial">Fahrenheit (°F)</MenuItem>
         </Select>
+        {favorites.length > 0 && (
+          <Select
+            displayEmpty
+            value=""
+            onChange={(e) => handleFavoriteClick(e.target.value)}
+            sx={{
+              minWidth: 200,
+              borderRadius: "20px",
+              bgcolor: "white",
+              boxShadow: 2,
+            }}
+          >
+            <MenuItem value="" disabled>
+              Select Favourite City
+            </MenuItem>
+            {favorites.map((city, index) => (
+              <MenuItem key={index} value={city}>
+                🌍 {city}
+              </MenuItem>
+            ))}
+          </Select>
+        )}
       </Box>
 
+      <Box
+        sx={{
+          mt:"35px"
+        }}
+      ></Box>
       <Typography
         variant="h3"
         textAlign="center"
-        my={3}
+        my={3} //m=margin,y=y-axis
         color="black"
         sx={{ fontSize: { xs: "1.8rem", sm: "2.2rem", md: "2.5rem" } }}
       >
@@ -124,34 +159,6 @@ const Home = () => {
 
       {error && <Typography color="error">{error}</Typography>}
       {searchError && <Typography color="error">{searchError}</Typography>}
-
-      {favorites.length > 0 && (
-        <Box mt={3}>
-          <Typography variant="h6" gutterBottom>
-            Favourite Cities
-          </Typography>
-          {favorites.length > 0 ? (
-            <Box display="flex" flexWrap="wrap" gap={1}>
-              {favorites.map((city, index) => (
-                <Chip
-                  key={index}
-                  label={
-                    <span style={{ fontWeight: "bold", color: "black" }}>
-                      🌍 {city}
-                    </span>
-                  }
-                  color="default"
-                  variant="outlined"
-                  onClick={() => handleFavoriteClick(city)}
-                />
-              ))}
-            </Box>
-          ) : (
-            <Typography color="text.secondary">No favourites yet.</Typography>
-          )}
-        </Box>
-      )}
-
       {weather && (
         <Box sx={{ position: "relative", mt: 2 }}>
           <WeatherCard weather={weather} unit={unit} />
