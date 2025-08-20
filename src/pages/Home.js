@@ -48,6 +48,13 @@ const Home = () => {
     handleSearch(city.split(",")[0]);
   };
 
+  const today = new Date().toLocaleDateString("en-US", {
+    weekday: "long",   
+    year: "numeric",   
+    month: "long",     
+    day: "numeric",    
+  });
+
   if (loading) return <Loader />;
 
   const condition = weather?.weather?.[0]?.main;
@@ -55,26 +62,6 @@ const Home = () => {
 
   const currentCity = weather ? `${weather.name}, ${weather.sys.country}` : "";
   const isFavorite = favorites.includes(currentCity);
-  //   const getWeatherIcon = (condition) => {
-  //     switch (condition.toLowerCase()) {
-  //       case "clear":
-  //         return "☀️";
-  //       case "clouds":
-  //         return "☁️";
-  //       case "rain":
-  //         return "🌧️";
-  //       case "thunderstorm":
-  //         return "⛈️";
-  //       case "snow":
-  //         return "❄️";
-  //       case "mist":
-  //       case "haze":
-  //       case "fog":
-  //         return "🌫️";
-  //       default:
-  //         return "🌍";
-  //     }
-  //   };
 
   return (
     <Box
@@ -97,6 +84,14 @@ const Home = () => {
       >
         Weather App
       </Typography>
+
+      <Typography
+          variant="subtitle1"
+          color="text.secondary"
+          gutterBottom
+        >
+          {today}
+        </Typography>
 
       <SearchBar onSearch={handleSearch} />
 
