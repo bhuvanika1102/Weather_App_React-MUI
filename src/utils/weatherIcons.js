@@ -4,7 +4,7 @@ import ThunderstormIcon from "@mui/icons-material/Thunderstorm";
 import UmbrellaIcon from "@mui/icons-material/Umbrella";
 import AcUnitIcon from "@mui/icons-material/AcUnit";
 import GrainIcon from "@mui/icons-material/Grain";
-import FoggyIcon from "@mui/icons-material/CloudQueue"; 
+import FoggyIcon from "@mui/icons-material/CloudQueue";
 
 export const getWeatherIcon = (main, description) => {
   switch (main.toLowerCase()) {

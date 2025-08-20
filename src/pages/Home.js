@@ -4,7 +4,14 @@ import useWeather from "../hooks/useWeather";
 import Loader from "../components/Loader";
 import SearchBar from "../components/SearchBar";
 import WeatherCard from "../components/WeatherCard";
-import { Box, Typography, IconButton, Chip } from "@mui/material";
+import {
+  Box,
+  Typography,
+  IconButton,
+  Chip,
+  Select,
+  MenuItem,
+} from "@mui/material";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
 import getBackground from "../utils/getBackground";
@@ -13,6 +20,7 @@ const Home = () => {
   const { weather, loading, error, setWeather } = useWeather();
   const [searchError, setSearchError] = useState("");
   const [favorites, setFavorites] = useState([]);
+  const [unit, setUnit] = useState("metric");
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("favorites")) || [];
@@ -23,9 +31,9 @@ const Home = () => {
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
-  const handleSearch = async (city) => {
+  const handleSearch = async (city, selectedUnit = unit) => {
     try {
-      const data = await getWeatherByCity(city);
+      const data = await getWeatherByCity(city, selectedUnit);
       setWeather(data);
       setSearchError("");
     } catch {
@@ -49,10 +57,10 @@ const Home = () => {
   };
 
   const today = new Date().toLocaleDateString("en-US", {
-    weekday: "long",   
-    year: "numeric",   
-    month: "long",     
-    day: "numeric",    
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 
   if (loading) return <Loader />;
@@ -75,6 +83,29 @@ const Home = () => {
         transition: "background 0.5s ease",
       }}
     >
+      <Box sx={{ position: "absolute", top: 15, left: 15 }}>
+        <Select
+          value={unit}
+          onChange={(e) => {
+            const newUnit = e.target.value;
+            setUnit(newUnit);
+            if (weather?.name) {
+              handleSearch(weather.name, newUnit); 
+            }
+          }}
+          sx={{
+            borderRadius: "20px",
+            bgcolor: "white",
+            px: 2,
+            py: 0.5,
+            boxShadow: 2,
+          }}
+        >
+          <MenuItem value="metric">Celsius (°C)</MenuItem>
+          <MenuItem value="imperial">Fahrenheit (°F)</MenuItem>
+        </Select>
+      </Box>
+
       <Typography
         variant="h3"
         textAlign="center"
@@ -85,13 +116,9 @@ const Home = () => {
         Weather App
       </Typography>
 
-      <Typography
-          variant="subtitle1"
-          color="text.secondary"
-          gutterBottom
-        >
-          {today}
-        </Typography>
+      <Typography variant="subtitle1" color="text.secondary" gutterBottom>
+        {today}
+      </Typography>
 
       <SearchBar onSearch={handleSearch} />
 
@@ -127,8 +154,7 @@ const Home = () => {
 
       {weather && (
         <Box sx={{ position: "relative", mt: 2 }}>
-          <WeatherCard weather={weather} />
-
+          <WeatherCard weather={weather} unit={unit} />
           <IconButton
             onClick={toggleFavorite}
             sx={{
